@@ -1,4 +1,7 @@
 @extends('layouts.topics')
+@section('extra-js')
+    {!! NoCaptcha::renderJs() !!}
+@endsection
 @section('content')
    <div class="container">
         <h2>Créer un topic</h2>
@@ -14,6 +17,15 @@
             <div class="invalid-feedback"> {{ $errors->first('content')}}</div>
         @enderror
             <button type="submit">Enregistrer</button>
+            <div>
+                {!! NoCaptcha::display() !!}
+
+                @if ($errors->has('g-recaptcha-response'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                    </span>
+                 @endif
+            </div>
         </form>
    </div>
 @endsection

@@ -41,9 +41,10 @@ class TopicController extends Controller
      */
     public function store(Request $request)
     {
-        $datas = $request->validate([
+        $request->validate([
             'title' => 'required|min:5',
-            'content' => 'required|min:10'
+            'content' => 'required|min:10',
+            'g-recaptcha-response' => 'required|captcha'
         ]);
       
        $user =  Auth::user();
@@ -77,7 +78,9 @@ class TopicController extends Controller
      */
     public function edit(Topic $topic)
     {
-        //
+        $this->authorize('update',$topic);
+
+        return view('topics.edit',compact('topic'));
     }
 
     /**
@@ -89,7 +92,14 @@ class TopicController extends Controller
      */
     public function update(Request $request, Topic $topic)
     {
-        //
+        dd('ff');
+        $datas = $request->validate([
+            'title' => 'required|min:5',
+            'content' => 'required|min:10'
+        ]);
+      
+       $topic->update($datas);
+       return redirect()->route('topics.show',$topic->id);
     }
 
     /**
@@ -100,6 +110,7 @@ class TopicController extends Controller
      */
     public function destroy(Topic $topic)
     {
-        //
+        $this->authorize('delete',$topic);
+        dd('DEST');
     }
 }
